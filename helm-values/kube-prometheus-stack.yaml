@@ -1,5 +1,5 @@
 alertmanager:
-  config:
+  config: # https://prometheus.io/docs/alerting/latest/configuration/
     global:
       slack_api_url: '${SLACK_INCOMING_WEBHOOK_URL}'
       smtp_smarthost: '${SMTP_HOSTNAME}:${SMTP_HOSTPORT}'
@@ -38,7 +38,7 @@ alertmanager:
               storage: 2Gi
 grafana:
   logLevel: '${LOG_LEVEL}'
-  smtp:
+  smtp: # https://grafana.com/docs/grafana/next/setup-grafana/configure-grafana/#smtp
     enabled: true
     host: '${SMTP_HOSTNAME}:${SMTP_HOSTPORT}'
     username: '${SMTP_USERNAME}'
@@ -47,10 +47,12 @@ grafana:
     skip_verify: ${SMTP_REQUIRE_TLS}
   persistence:
     enabled: true
-    accessModes: ['ReadWriteOnce']
+    accessModes: [ 'ReadWriteOnce' ]
     size: 2Gi
+
 prometheusOperator:
   logLevel: '${LOG_LEVEL}'
+
 prometheus:
   prometheusSpec:
     logLevel: '${LOG_LEVEL}'
