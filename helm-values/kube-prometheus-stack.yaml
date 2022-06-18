@@ -1,5 +1,4 @@
 alertmanager:
-  logLevel: ${LOG_LEVEL}
   config:
     global:
       slack_api_url: ${SLACK_INCOMING_WEBHOOK_URL}
@@ -51,7 +50,6 @@ grafana:
 prometheusOperator:
   logLevel: ${LOG_LEVEL}
 prometheus:
-  logLevel: ${LOG_LEVEL}
   prometheusSpec:
     logLevel: ${LOG_LEVEL}
     storageSpec:
