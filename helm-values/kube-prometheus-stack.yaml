@@ -1,15 +1,15 @@
 alertmanager:
   config:
     global:
-      slack_api_url: '${SLACK_INCOMING_WEBHOOK_URL}'
-      smtp_smarthost: '${SMTP_HOSTNAME}:${SMTP_HOSTPORT}'
-      smtp_auth_username: '${SMTP_USERNAME}'
-      smtp_auth_password: '${SMTP_PASSWORD}'
-      smtp_require_tls: '${SMTP_REQUIRE_TLS}'
-      smtp_from: '${SMTP_FROM}'
+      slack_api_url: "${SLACK_INCOMING_WEBHOOK_URL}"
+      smtp_smarthost: "${SMTP_HOSTNAME}:${SMTP_HOSTPORT}"
+      smtp_auth_username: "${SMTP_USERNAME}"
+      smtp_auth_password: "${SMTP_PASSWORD}"
+      smtp_require_tls: "${SMTP_REQUIRE_TLS}"
+      smtp_from: "${SMTP_FROM}"
     route:
       receiver: slack-notifications
-      group_by: [ 'alertname', 'job' ]
+      group_by: [ "alertname", "job" ]
       routes:
         - match:
             severity: warning
@@ -19,44 +19,44 @@ alertmanager:
             severity: warning
           receiver: email-notifications
     receivers:
-      - name: 'email-notifications'
+      - name: "email-notifications"
         email_configs:
-          - to: '${EMAIL_ADDRESS}'
+          - to: "${EMAIL_ADDRESS}"
             send_resolved: true
-      - name: 'slack-notifications'
+      - name: "slack-notifications"
         slack_configs:
-          - channel: '#${SLACK_CHANNEL}'
+          - channel: "#${SLACK_CHANNEL}"
             send_resolved: true
   alertmanagerSpec:
-    logLevel: '${LOG_LEVEL}'
+    logLevel: "${LOG_LEVEL}"
     storage:
       volumeClaimTemplate:
         spec:
-          accessModes: [ 'ReadWriteOnce' ]
+          accessModes: [ "ReadWriteOnce" ]
           resources:
             requests:
               storage: 2Gi
 grafana:
-  logLevel: '${LOG_LEVEL}'
+  logLevel: "${LOG_LEVEL}"
   smtp:
     enabled: true
-    host: '${SMTP_HOSTNAME}:${SMTP_HOSTPORT}'
-    username: '${SMTP_USERNAME}'
-    password: '${SMTP_PASSWORD}'
-    from_address: '${SMTP_FROM}'
+    host: "${SMTP_HOSTNAME}:${SMTP_HOSTPORT}"
+    username: "${SMTP_USERNAME}"
+    password: "${SMTP_PASSWORD}"
+    from_address: "${SMTP_FROM}"
   persistence:
     enabled: true
-    accessModes: ['ReadWriteOnce']
+    accessModes: ["ReadWriteOnce"]
     size: 2Gi
 prometheusOperator:
-  logLevel: '${LOG_LEVEL}'
+  logLevel: "${LOG_LEVEL}"
 prometheus:
   prometheusSpec:
-    logLevel: '${LOG_LEVEL}'
+    logLevel: "${LOG_LEVEL}"
     storageSpec:
       volumeClaimTemplate:
         spec:
-          accessModes: [ 'ReadWriteOnce' ]
+          accessModes: [ "ReadWriteOnce" ]
           resources:
             requests:
               storage: 2Gi
