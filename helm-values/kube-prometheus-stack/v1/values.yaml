@@ -44,7 +44,7 @@ grafana:
     username: '${SMTP_USERNAME}'
     password: '${SMTP_PASSWORD}'
     from_address: '${SMTP_FROM}'
-    skip_verify: ${SMTP_REQUIRE_TLS}
+    skip_verify: ${SMTP_SKIP_SSL_VERIFY}
   persistence:
     enabled: true
     accessModes: [ 'ReadWriteOnce' ]
