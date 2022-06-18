@@ -18,7 +18,7 @@ helm repo update
 
 eval "echo \"$(cat values.yaml)\"" >values.out.yaml
 
-#helm upgrade --install prometheus prometheus-community/kube-prometheus-stack \
-#  --version 36.0.2 \
-#  --namespace monitoring --create-namespace \
-#  -f values.out.yaml
+helm upgrade --install prometheus prometheus-community/kube-prometheus-stack \
+  --version 36.0.2 \
+  --namespace monitoring --create-namespace \
+  -f values.out.yaml
