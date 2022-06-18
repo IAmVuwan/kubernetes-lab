@@ -25,7 +25,7 @@ alertmanager:
             send_resolved: true
       - name: "slack-notifications"
         slack_configs:
-          - channel: "#${SLACK_CHANNEL}"
+          - channel: '#\"${SLACK_CHANNEL}\"'
             send_resolved: true
   alertmanagerSpec:
     logLevel: "${LOG_LEVEL}"
