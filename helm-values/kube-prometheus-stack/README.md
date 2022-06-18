@@ -1,8 +1,5 @@
-# Kube Prometheus Stack
+# Kube Prometheus Stack Versions
 
-
-## Versions
-
-## v1:
+## v1: [values.yaml](v1/values.yaml)
 - persistence: `enabled`
 - ingress: `ignored`
