@@ -1,3 +1,16 @@
+defaultRules:
+  rules:
+    etcd: false
+    kubernetesSystem: false
+    kubeScheduler: false
+kubeControllerManager:
+  enabled: false
+kubeEtcd:
+  enabled: false
+kubeScheduler:
+  enabled: false
+kubeProxy:
+  enabled: false
 alertmanager:
   config: # https://prometheus.io/docs/alerting/latest/configuration/
     global:
@@ -49,10 +62,12 @@ grafana:
     enabled: true
     accessModes: [ 'ReadWriteOnce' ]
     size: 2Gi
-
 prometheusOperator:
   logLevel: '${LOG_LEVEL}'
-
+  tls:
+    enabled: false
+  admissionWebhooks:
+    enabled: false
 prometheus:
   prometheusSpec:
     logLevel: '${LOG_LEVEL}'
