@@ -25,18 +25,12 @@ envsubst <"values.yaml" >"values.out.yaml"
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 
-helm upgrade --install prometheus prometheus-community/kube-prometheus-stack \
+helm upgrade --install --wait --timeout 600s prometheus prometheus-community/kube-prometheus-stack \
   --version 36.0.2 \
   --namespace monitoring --create-namespace \
   -f values.out.yaml
 
-echo "Sleeping for 60s......"
-sleep 60s
-
 kubectl apply -f docker-containers.yaml
-
-echo "Sleeping for 30s......"
-sleep 30s
 
 envsubst <"deployment.yaml" >"deployment.out.yaml"
 

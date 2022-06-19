@@ -12,4 +12,7 @@ help:
 ##@ Development
 
 setup_kind_cluster:
-	curl -s "https://raw.githubusercontent.com/unlockprogramming/lab/main/kubernetes/kubernetes-setup-using-kind/install.sh" | bash
+	./kubernetes/kubernetes-setup-using-kind/install.sh
+
+cleanup_kind_cluster:
+	./kubernetes/kubernetes-setup-using-kind/cleanup.sh

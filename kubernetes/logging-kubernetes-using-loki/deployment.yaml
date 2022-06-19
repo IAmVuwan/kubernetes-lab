@@ -7,7 +7,7 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: notification-using-kube-prometheus-stack
+  name: logging-kubernetes-using-loki
   namespace: foo-system
   labels:
     app: foo
@@ -23,15 +23,7 @@ spec:
     spec:
       containers:
         - name: foo
-          image: digitalocean/flask-helloworld:latest
-          command: [ "sh", "-c" ]
-          args:
-            - |-
-              python -c "print(['x' * $N_BYTES for x in range($N_TIMES)])"
-              python "app.py"
-          ports:
-            - containerPort: 5000
-              hostPort: 80
+          image: chentex/random-logger:latest
           resources:
             requests:
               memory: "20Mi"
