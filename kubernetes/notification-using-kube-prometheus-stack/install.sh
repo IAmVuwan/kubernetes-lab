@@ -30,10 +30,12 @@ helm upgrade --install prometheus prometheus-community/kube-prometheus-stack \
   --namespace monitoring --create-namespace \
   -f values.out.yaml
 
+echo "Sleeping for 60s......"
 sleep 60s
 
 kubectl apply -f docker-containers.yaml
 
+echo "Sleeping for 30s......"
 sleep 30s
 
 envsubst <"deployment.yaml" >"deployment.out.yaml"
