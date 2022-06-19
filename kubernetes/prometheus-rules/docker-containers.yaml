@@ -15,7 +15,7 @@ spec:
 
         - alert: ContainerCpuUsage
           expr: '(sum(rate(container_cpu_usage_seconds_total{name!=""}[3m])) BY (instance, name) * 100) > 80'
-          for: 2m
+          for: 30s
           labels:
             severity: warning
           annotations:
@@ -24,7 +24,7 @@ spec:
 
         - alert: ContainerMemoryUsage
           expr: '(sum(container_memory_working_set_bytes{name!=""}) BY (instance, name) / sum(container_spec_memory_limit_bytes > 0) BY (instance, name) * 100) > 80'
-          for: 2m
+          for: 30s
           labels:
             severity: warning
           annotations:
