@@ -14,7 +14,7 @@ metadata:
 spec:
   containers:
     - name: foo-app
-      image: python:3.9-alpine
+      image: digitalocean/flask-helloworld:latest
       command: [ "sh", "-c" ]
       args:
         - |-
