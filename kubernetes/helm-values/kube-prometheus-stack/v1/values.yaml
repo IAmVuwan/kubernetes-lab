@@ -41,7 +41,7 @@ alertmanager:
           continue: true
           receiver: "slack-notifications"
         - matchers:
-            - severity = "critical"
+            - severity = "warning|critical"
           receiver: "email-notifications"
     receivers:
       - name: "null"
