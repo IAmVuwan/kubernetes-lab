@@ -18,5 +18,5 @@ spec:
       command: [ "sh", "-c" ]
       args:
         - |-
-          python -c "print('x' * $N_DATA)"
+          python -c "print('x' * $N_BYTES)"
           python "app.py
