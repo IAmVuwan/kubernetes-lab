@@ -1,0 +1,23 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app: kube-prometheus-stack
+    release: prometheus
+    role: alert-rules
+  name: docker-containers-prometheus-rule
+spec:
+  groups:
+
+    - name: GoogleCadvisor
+
+      rules:
+
+        - alert: ContainerMemoryUsage
+          expr: '(sum(container_memory_working_set_bytes{name!=""}) BY (instance, name) / sum(container_spec_memory_limit_bytes > 0) BY (instance, name) * 100) > 80'
+          for: 2m
+          labels:
+            severity: warning
+          annotations:
+            summary: Container Memory usage (instance {{ $labels.instance }})
+            description: "Container Memory usage is above 80%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
