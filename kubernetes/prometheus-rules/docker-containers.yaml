@@ -13,15 +13,6 @@ spec:
 
       rules:
 
-        - alert: ContainerCpuUsage
-          expr: '(sum(rate(container_cpu_usage_seconds_total{name!=""}[3m])) BY (instance, name) * 100) > 80'
-          for: 30s
-          labels:
-            severity: warning
-          annotations:
-            summary: Container CPU usage (instance {{ $labels.instance }})
-            description: "Container CPU usage is above 80%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
-
         - alert: ContainerMemoryUsage
           expr: '(sum(container_memory_working_set_bytes{name!=""}) BY (instance, name) / sum(container_spec_memory_limit_bytes > 0) BY (instance, name) * 100) > 80'
           for: 30s
