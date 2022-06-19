@@ -13,11 +13,15 @@ source .env
 : "$EMAIL_ADDRESS"
 : "$SLACK_INCOMING_WEBHOOK_URL"
 : "$SLACK_CHANNEL"
+: "$HTTP_SCHEME"
+: "$CLUSTER_FQDN"
+: "$ALERTMANAGER_EXTERNAL_HOST"
+: "$PROMETHEUS_EXTERNAL_HOST"
+
+envsubst < "values.yaml" > "values.out.yaml"
 
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
-
-eval "echo \"$(cat values.yaml)\"" >values.out.yaml
 
 helm upgrade --install prometheus prometheus-community/kube-prometheus-stack \
   --version 36.0.2 \

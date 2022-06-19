@@ -14,70 +14,139 @@ kubeProxy:
 alertmanager:
   config: # https://prometheus.io/docs/alerting/latest/configuration/
     global:
-      slack_api_url: '${SLACK_INCOMING_WEBHOOK_URL}'
-      smtp_smarthost: '${SMTP_HOSTNAME}:${SMTP_HOSTPORT}'
-      smtp_auth_username: '${SMTP_USERNAME}'
-      smtp_auth_password: '${SMTP_PASSWORD}'
+      slack_api_url: "${SLACK_INCOMING_WEBHOOK_URL}"
+      smtp_smarthost: "${SMTP_HOSTNAME}:${SMTP_HOSTPORT}"
+      smtp_auth_username: "${SMTP_USERNAME}"
+      smtp_auth_password: "${SMTP_PASSWORD}"
       smtp_require_tls: ${SMTP_REQUIRE_TLS}
-      smtp_from: '${SMTP_FROM}'
+      smtp_from: "${SMTP_FROM}"
     route:
-      receiver: 'slack-notifications'
-      group_by: [ 'alertname' ]
+      receiver: "slack-notifications"
+      group_by: [ "alertname" ]
       routes:
-        - receiver: 'null'
+        - receiver: "null"
           matchers:
-            - alertname =~ 'InfoInhibitor|Watchdog'
+            - alertname =~ "InfoInhibitor|Watchdog"
         - match:
-            severity: 'warning'
+            severity: "warning"
           continue: true
-          receiver: 'slack-notifications'
+          receiver: "slack-notifications"
         - match:
-            severity: 'critical'
-          receiver: 'email-notifications'
+            severity: "critical"
+          receiver: "email-notifications"
     receivers:
-      - name: 'email-notifications'
+      - name: "null"
+      - name: "email-notifications"
         email_configs:
-          - to: '${EMAIL_ADDRESS}'
+          - to: "${EMAIL_ADDRESS}"
             send_resolved: true
-      - name: 'slack-notifications'
+      - name: "slack-notifications"
         slack_configs:
-          - channel: '${SLACK_CHANNEL}'
+          - channel: "${SLACK_CHANNEL}"
             send_resolved: true
+            icon_url: "https://avatars3.githubusercontent.com/u/3380462"
+            title: "{{ template \"slack.cp.title\" . }}"
+            text: "{{ template \"slack.cp.text\" . }}"
+            footer: "${HTTP_SCHEME}://${CLUSTER_FQDN}"
+            actions:
+              - type: button
+                text: "Runbook :blue_book:"
+                url: "{{ (index .Alerts 0).Annotations.runbook_url }}"
+              - type: button
+                text: "Query :mag:"
+                url: "{{ (index .Alerts 0).GeneratorURL }}"
+              - type: button
+                text: "Silence :no_bell:"
+                url: "{{ template \"__alert_silence_link\" . }}"
+  templateFiles:
+    cp-slack-templates.tmpl: |-
+      {{ define "slack.cp.title" -}}
+        [{{ .Status | toUpper -}}
+        {{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{- end -}}
+        ] {{ template "__alert_severity_prefix_title" . }} {{ .CommonLabels.alertname }}
+      {{- end }}
+      {{/* The test to display in the alert */}}
+      {{ define "slack.cp.text" -}}
+        {{ range .Alerts }}
+            *Alert:* {{ .Annotations.message}}
+            *Details:*
+            {{ range .Labels.SortedPairs }} - *{{ .Name }}:* \`{{ .Value }}\`
+            {{ end }}
+            *-----*
+          {{ end }}
+      {{- end }}
+      {{ define "__alert_silence_link" -}}
+        {{ .ExternalURL }}/#/silences/new?filter=%7B
+        {{- range .CommonLabels.SortedPairs -}}
+          {{- if ne .Name "alertname" -}}
+            {{- .Name }}%3D"{{- .Value -}}"%2C%20
+          {{- end -}}
+        {{- end -}}
+          alertname%3D"{{ .CommonLabels.alertname }}"%7D
+      {{- end }}
+      {{ define "__alert_severity_prefix" -}}
+          {{ if ne .Status "firing" -}}
+          :white_check_mark:
+          {{- else if eq .Labels.severity "critical" -}}
+          :fire:
+          {{- else if eq .Labels.severity "warning" -}}
+          :warning:
+          {{- else -}}
+          :question:
+          {{- end }}
+      {{- end }}
+      {{ define "__alert_severity_prefix_title" -}}
+          {{ if ne .Status "firing" -}}
+          :white_check_mark:
+          {{- else if eq .CommonLabels.severity "critical" -}}
+          :fire:
+          {{- else if eq .CommonLabels.severity "warning" -}}
+          :warning:
+          {{- else if eq .CommonLabels.severity "info" -}}
+          :information_source:
+          {{- else if eq .CommonLabels.status_icon "information" -}}
+          :information_source:
+          {{- else -}}
+          :question:
+          {{- end }}
+      {{- end }}
   alertmanagerSpec:
-    logLevel: '${LOG_LEVEL}'
+    logLevel: "${LOG_LEVEL}"
+    externalUrl: "${HTTP_SCHEME}://${ALERTMANAGER_EXTERNAL_HOST}"
     storage:
       volumeClaimTemplate:
         spec:
-          accessModes: [ 'ReadWriteOnce' ]
+          accessModes: [ "ReadWriteOnce" ]
           resources:
             requests:
               storage: 2Gi
 grafana:
-  logLevel: '${LOG_LEVEL}'
+  logLevel: "${LOG_LEVEL}"
   smtp: # https://grafana.com/docs/grafana/next/setup-grafana/configure-grafana/#smtp
     enabled: true
-    host: '${SMTP_HOSTNAME}:${SMTP_HOSTPORT}'
-    username: '${SMTP_USERNAME}'
-    password: '${SMTP_PASSWORD}'
-    from_address: '${SMTP_FROM}'
+    host: "${SMTP_HOSTNAME}:${SMTP_HOSTPORT}"
+    username: "${SMTP_USERNAME}"
+    password: "${SMTP_PASSWORD}"
+    from_address: "${SMTP_FROM}"
     skip_verify: ${SMTP_SKIP_SSL_VERIFY}
   persistence:
     enabled: true
-    accessModes: [ 'ReadWriteOnce' ]
+    accessModes: [ "ReadWriteOnce" ]
     size: 2Gi
 prometheusOperator:
-  logLevel: '${LOG_LEVEL}'
+  logLevel: "${LOG_LEVEL}"
   tls:
     enabled: false
   admissionWebhooks:
     enabled: false
 prometheus:
   prometheusSpec:
-    logLevel: '${LOG_LEVEL}'
+    externalUrl: "${HTTP_SCHEME}://${PROMETHEUS_EXTERNAL_HOST}"
+    logLevel: "${LOG_LEVEL}"
     storageSpec:
       volumeClaimTemplate:
         spec:
-          accessModes: [ 'ReadWriteOnce' ]
+          accessModes: [ "ReadWriteOnce" ]
           resources:
             requests:
               storage: 2Gi
