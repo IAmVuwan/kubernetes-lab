@@ -20,19 +20,28 @@ alertmanager:
       smtp_auth_password: "${SMTP_PASSWORD}"
       smtp_require_tls: ${SMTP_REQUIRE_TLS}
       smtp_from: "${SMTP_FROM}"
+    inhibit_rules:
+      - source_matchers: [ severity="critical" ]
+        target_matchers: [ severity="warning" ]
+        # Apply inhibition if the alertname is the same.
+        # CAUTION:
+        #   If all label names listed in `equal` are missing
+        #   from both the source and target alerts,
+        #   the inhibition rule will apply!
+        equal: [ alertname, cluster, service ]
     route:
+      group_by: ['alertname', 'cluster', 'service']
       receiver: "slack-notifications"
-      group_by: [ "alertname" ]
       routes:
         - receiver: "null"
           matchers:
             - alertname =~ "InfoInhibitor|Watchdog"
-        - match:
-            severity: "warning"
+        - matchers:
+            - severity = "warning|critical"
           continue: true
           receiver: "slack-notifications"
-        - match:
-            severity: "critical"
+        - matchers:
+            - severity = "critical"
           receiver: "email-notifications"
     receivers:
       - name: "null"
