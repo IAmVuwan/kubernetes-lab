@@ -126,13 +126,14 @@ alertmanager:
               storage: 2Gi
 grafana:
   logLevel: "${LOG_LEVEL}"
-  smtp: # https://grafana.com/docs/grafana/next/setup-grafana/configure-grafana/#smtp
-    enabled: true
-    host: "${SMTP_HOSTNAME}:${SMTP_HOSTPORT}"
-    username: "${SMTP_USERNAME}"
-    password: "${SMTP_PASSWORD}"
-    from_address: "${SMTP_FROM}"
-    skip_verify: ${SMTP_SKIP_SSL_VERIFY}
+  grafana.ini:
+    smtp: # https://grafana.com/docs/grafana/next/setup-grafana/configure-grafana/#smtp
+      enabled: true
+      host: "${SMTP_HOSTNAME}:${SMTP_HOSTPORT}"
+      username: "${SMTP_USERNAME}"
+      password: "${SMTP_PASSWORD}"
+      from_address: "${SMTP_FROM}"
+      skip_verify: ${SMTP_SKIP_SSL_VERIFY}
   persistence:
     enabled: true
     accessModes: [ "ReadWriteOnce" ]
