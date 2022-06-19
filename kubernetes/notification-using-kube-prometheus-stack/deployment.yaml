@@ -2,13 +2,13 @@
 kind: Namespace
 apiVersion: v1
 metadata:
-  name: foo-system
+  name: foo-deployment
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: notification-using-kube-prometheus-stack
-  namespace: foo-system
+  name: foo-deployment
+  namespace: notification-using-kube-prometheus-stack
   labels:
     app: foo
 spec:

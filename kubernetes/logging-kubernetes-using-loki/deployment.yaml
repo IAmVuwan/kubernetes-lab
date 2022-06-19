@@ -2,13 +2,13 @@
 kind: Namespace
 apiVersion: v1
 metadata:
-  name: foo-system
+  name: logging-kubernetes-using-loki
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: logging-kubernetes-using-loki
-  namespace: foo-system
+  name: foo-deployment
+  namespace: logging-kubernetes-using-loki
   labels:
     app: foo
 spec:
