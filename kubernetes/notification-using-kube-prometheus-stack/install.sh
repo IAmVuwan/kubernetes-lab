@@ -17,8 +17,10 @@ source .env
 : "$CLUSTER_FQDN"
 : "$ALERTMANAGER_EXTERNAL_HOST"
 : "$PROMETHEUS_EXTERNAL_HOST"
+: "$N_BYTES"
+: "$N_TIMES"
 
-envsubst < "values.yaml" > "values.out.yaml"
+envsubst <"values.yaml" >"values.out.yaml"
 
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
@@ -27,3 +29,13 @@ helm upgrade --install prometheus prometheus-community/kube-prometheus-stack \
   --version 36.0.2 \
   --namespace monitoring --create-namespace \
   -f values.out.yaml
+
+sleep 60s
+
+kubectl apply -f docker-containers.yaml
+
+sleep 30s
+
+envsubst <"deployment.yaml" >"deployment.out.yaml"
+
+kubectl apply -f deployment.out.yaml
