@@ -19,4 +19,4 @@ spec:
       args:
         - |-
           python -c "print('x' * $N_BYTES)"
-          python "app.py
+          python "app.py"
