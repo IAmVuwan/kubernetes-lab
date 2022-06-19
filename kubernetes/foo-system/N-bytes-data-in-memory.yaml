@@ -18,7 +18,7 @@ spec:
       command: [ "sh", "-c" ]
       args:
         - |-
-          python -c "print('x' * $N_BYTES)"
+          python -c "print(['x' * $N_BYTES for x in range($N_TIMES)])"
           python "app.py"
       resources:
         requests:
