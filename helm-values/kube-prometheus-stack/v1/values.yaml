@@ -21,16 +21,19 @@ alertmanager:
       smtp_require_tls: ${SMTP_REQUIRE_TLS}
       smtp_from: '${SMTP_FROM}'
     route:
-      receiver: slack-notifications
-      group_by: [ 'alertname', 'job' ]
+      receiver: 'slack-notifications'
+      group_by: [ 'alertname' ]
       routes:
+        - receiver: 'null'
+          matchers:
+            - alertname =~ 'InfoInhibitor|Watchdog'
         - match:
-            severity: warning
+            severity: 'warning'
           continue: true
-          receiver: slack-notifications
+          receiver: 'slack-notifications'
         - match:
-            severity: critical
-          receiver: email-notifications
+            severity: 'critical'
+          receiver: 'email-notifications'
     receivers:
       - name: 'email-notifications'
         email_configs:
