@@ -31,25 +31,20 @@ alertmanager:
         equal: [ alertname, cluster, service ]
     route:
       group_by: ['alertname', 'cluster', 'service']
-      receiver: "slack-notifications"
+      receiver: "k8s-admin"
       routes:
         - receiver: "null"
           matchers:
             - alertname =~ "InfoInhibitor|Watchdog"
         - matchers:
             - severity = "warning|critical"
-          continue: true
-          receiver: "slack-notifications"
-        - matchers:
-            - severity = "warning|critical"
-          receiver: "email-notifications"
+          receiver: "k8s-admin"
     receivers:
       - name: "null"
-      - name: "email-notifications"
+      - name: "k8s-admin"
         email_configs:
           - to: "${EMAIL_ADDRESS}"
             send_resolved: true
-      - name: "slack-notifications"
         slack_configs:
           - channel: "${SLACK_CHANNEL}"
             send_resolved: true
