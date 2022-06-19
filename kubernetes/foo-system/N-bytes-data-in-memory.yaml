@@ -20,3 +20,8 @@ spec:
         - |-
           python -c "print('x' * $N_BYTES)"
           python "app.py"
+      resources:
+        requests:
+          memory: "30Mi"
+        limits:
+          memory: "50Mi"
