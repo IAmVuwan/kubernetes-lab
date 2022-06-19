@@ -20,6 +20,9 @@ spec:
         - |-
           python -c "print(['x' * $N_BYTES for x in range($N_TIMES)])"
           python "app.py"
+      ports:
+        - containerPort: 5000
+          hostPort: 80
       resources:
         requests:
           memory: "20Mi"
@@ -27,3 +30,15 @@ spec:
         limits:
           memory: "50Mi"
           cpu: "100m"
+      livenessProbe:
+        httpGet:
+          path: /
+          port: 80
+        initialDelaySeconds: 15
+        timeoutSeconds: 1
+      readinessProbe:
+        httpGet:
+          path: /
+          port: 80
+        initialDelaySeconds: 120
+        timeoutSeconds: 1
