@@ -1,0 +1,25 @@
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: foo-system
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: foo-app
+  namespace: foo-system
+  labels:
+    app: foo
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: foo-app
+        image: python:3.9-alpine
+        command: ["python"]
+        args:
+        - -c 
+        - 'print("xyz" * $N)'
+  backoffLimit: 2
