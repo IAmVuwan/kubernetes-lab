@@ -1,0 +1,53 @@
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: foo-system
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: foo-deployment
+  namespace: foo-system
+  labels:
+    app: foo-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: foo
+  template:
+    metadata:
+      labels:
+        app: foo
+    spec:
+      containers:
+      - name: foo
+        image: digitalocean/flask-helloworld:latest
+        command: [ "sh", "-c" ]
+        args:
+          - |-
+            python -c "print(['x' * $N_BYTES for x in range($N_TIMES)])"
+            python "app.py"
+        ports:
+          - containerPort: 5000
+            hostPort: 80
+        resources:
+          requests:
+            memory: "20Mi"
+            cpu: "20m"
+          limits:
+            memory: "50Mi"
+            cpu: "50m"
+#      livenessProbe:
+#        httpGet:
+#          path: /
+#          port: 80
+#        initialDelaySeconds: 15
+#        timeoutSeconds: 1
+#      readinessProbe:
+#        httpGet:
+#          path: /
+#          port: 80
+#        initialDelaySeconds: 360
+#        timeoutSeconds: 1
