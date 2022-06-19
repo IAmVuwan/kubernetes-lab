@@ -1,0 +1,22 @@
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: foo-system
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: foo-app
+  namespace: foo-system
+  labels:
+    app: foo
+spec:
+  containers:
+    - name: foo-app
+      image: python:3.9-alpine
+      command: [ "sh", "-c" ]
+      args:
+        - |-
+          python -c "print('x' * $N_DATA)"
+          python "app.py
