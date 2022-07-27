@@ -1,10 +1,10 @@
-# Lab: Unlock Programming
+# Kubernetes
 
-Lab resources that are used for [unlockprogramming.com](https://unlockprogramming.com).
+Kubernetes resources that are used for [unlockprogramming.com](https://unlockprogramming.com).
 
 ## Create kind cluster
 
 ```bash
-curl -s "https://raw.githubusercontent.com/unlockprogramming/lab/main/kubernetes/kubernetes-setup-using-kind/install.sh" | bash
+curl -s "https://raw.githubusercontent.com/unlockprogramming/kubernetes/main/kubernetes-setup-using-kind/install.sh" | bash
 ```
 
