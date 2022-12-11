@@ -1,0 +1,48 @@
+
+airflow:
+  legacyCommands: false
+  # Generated using <python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())">
+  fernetKey: "ejEx89uVG1T3mY-QrDoQVX10nuqht4fO7S8CnGAIgOo="
+  # Generated using <python -c 'import secrets; print(secrets.token_urlsafe(16))'>
+  webserverSecretKey: "7-4QUH58L5PI8WcX0fujOQ"
+  executor: CeleryExecutor
+  config:
+    # dag configs
+    AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+    AIRFLOW__SCHEDULER__DAG_DIR_LIST_INTERVAL: "30"
+
+    # email configs
+    AIRFLOW__EMAIL__EMAIL_BACKEND: "airflow.utils.email.send_email_smtp"
+    AIRFLOW__SMTP__SMTP_HOST: "smtpmail.example.com"
+    AIRFLOW__SMTP__SMTP_MAIL_FROM: "admin@example.com"
+    AIRFLOW__SMTP__SMTP_PORT: "25"
+    AIRFLOW__SMTP__SMTP_SSL: "False"
+    AIRFLOW__SMTP__SMTP_STARTTLS: "False"
+
+    AIRFLOW__WEBSERVER__BASE_URL: "https://airflow.k8s.localdev.me"
+    AIRFLOW__CELERY__FLOWER_URL_PREFIX: ""
+
+    # enable rest endpoint
+    AIRFLOW__API__AUTH_BACKENDS: "airflow.api.auth.backend.session,airflow.api.auth.backend.basic_auth"
+  users:
+    ## define the user called "admin"
+    - username: admin
+      password: admin
+      role: Admin
+      email: airflow@k8s.localdev.me
+      firstName: Cluster
+      lastName: Admin
+  ## if we create a Deployment to perpetually sync `airflow.users`
+  usersUpdate: true
+#----
+ingress:
+  enabled: true
+  apiVersion: networking.k8s.io/v1
+  web:
+    host: "airflow.k8s.localdev.me"
+    path: ""
+  flower:
+    host: "airflow-flower.k8s.localdev.me"
+    path: ""
+postgresql:
+  enabled: true
