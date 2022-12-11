@@ -19,7 +19,7 @@ airflow:
     AIRFLOW__SMTP__SMTP_SSL: "False"
     AIRFLOW__SMTP__SMTP_STARTTLS: "False"
 
-    AIRFLOW__WEBSERVER__BASE_URL: "https://airflow.k8s.localdev.me"
+    AIRFLOW__WEBSERVER__BASE_URL: "https://airflow.$CLUSTER_FQDN"
     AIRFLOW__CELERY__FLOWER_URL_PREFIX: ""
 
     # enable rest endpoint
@@ -29,7 +29,7 @@ airflow:
     - username: admin
       password: admin
       role: Admin
-      email: airflow@k8s.localdev.me
+      email: airflow@$CLUSTER_FQDN
       firstName: Cluster
       lastName: Admin
   ## if we create a Deployment to perpetually sync `airflow.users`
@@ -39,10 +39,10 @@ ingress:
   enabled: true
   apiVersion: networking.k8s.io/v1
   web:
-    host: "airflow.k8s.localdev.me"
+    host: "airflow.$CLUSTER_FQDN"
     path: ""
   flower:
-    host: "airflow-flower.k8s.localdev.me"
+    host: "airflow-flower.$CLUSTER_FQDN"
     path: ""
 postgresql:
   enabled: true
